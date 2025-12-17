@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Layout from '../layout/page';
 import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from "next/navigation";
 
 const SignupForm = () => {
+  const router = useRouter();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -21,9 +23,30 @@ const SignupForm = () => {
     });
 
     const data = await res.json();
-    console.log(data);
-    toast("User is saved");
-    setForm({ name: "", email: "", password: "" })
+
+    if (!res.ok) {
+      if (data.message === "Email address is already registered") {
+        toast.error("Email address is already registered");
+      } else {
+        toast.error(data.message || "Something went wrong");
+      }
+      return;
+    }
+
+    const { token, name, image, id } = data;
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("name", form.name);
+    localStorage.setItem("image", image);
+    localStorage.setItem("userId", id);
+
+    // console.log(form.name, "nameeeeee");
+
+    toast.success("User is saved");
+
+    setForm({ name: "", email: "", password: "" });
+
+    router.push("/admin/Userlist");
   };
 
   return (
