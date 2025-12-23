@@ -19,6 +19,7 @@ export default function AdminUsers() {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState<number | null>(null);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
 
 
@@ -29,7 +30,7 @@ export default function AdminUsers() {
         limit: limit.toString(),
         role: roleFilter,
         status: statusFilter,
-        search,
+        search: debouncedSearch,
       });
 
       const res = await fetch(`/api/users?${params.toString()}`);
@@ -67,8 +68,15 @@ export default function AdminUsers() {
 
   useEffect(() => {
     fetchUsers();
-  }, [page, limit, roleFilter, statusFilter, search]);
+  }, [page, limit, roleFilter, statusFilter, debouncedSearch]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
 
   const handleRoleChange = async (id: number, newRole: string) => {
@@ -123,10 +131,10 @@ export default function AdminUsers() {
 
       <div className="flex justify-end items-center p-3 gap-73">
         <input type="text" placeholder="Search by email or mobile" className="border px-3 py-2 rounded w-90 focus:outline-none"
-          value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+          value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
         <div className="flex justify-center items-center gap-4">
           <select className="p-2 text-lg bg-amber-500 focus:outline-none rounded-md"
-            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}>
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
             <option value="">All Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>

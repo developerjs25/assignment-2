@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 
-export default function MyAccountPopup({ userId }: { userId: any }) {
+export default function MyAccountPopup({
+  userId,
+  mode = "self", 
+}: {
+  userId: number;
+  mode?: "self" | "admin";
+}){
   const [form, setForm] = useState({
     name: "",
     email: "",

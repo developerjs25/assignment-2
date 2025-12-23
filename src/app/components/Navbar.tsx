@@ -37,6 +37,7 @@ const Navbar: React.FC = () => {
     window.addEventListener('storage', syncUser);
     return () => window.removeEventListener('storage', syncUser);
   }, []);
+  
 
   const handleLogout = () => {
     localStorage.clear();

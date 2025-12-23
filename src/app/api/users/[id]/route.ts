@@ -1,28 +1,14 @@
 import { NextResponse } from "next/server";
-import formidable, { File } from "formidable";
+import { connectDB } from "@/lib/db";
 import fs from "fs";
 import path from "path";
-import mysql from "mysql2/promise";
 
-const pool = mysql.createPool({
-  host: "127.0.0.1",
-  user: "root",
-  password: "root",
-  database: "assignment-2",
-  port: 8889,
 
-  // host: "localhost",
-  // user: "root",
-  // password: "",
-  // database: "assignment2",
-  // waitForConnections: true,
-  // connectionLimit: 10,
-  // queueLimit: 0,
-});
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const { id } = await params;
-  const [rows]: any = await pool.execute(
+   const db = await connectDB();
+  const [rows]: any = await db.execute(
     "SELECT name, email ,mobile ,dob,image FROM users WHERE id = ?",
     [id]
   );
@@ -32,10 +18,11 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 
 
+
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   try {
     const { id } =await params;
-
+const db = await connectDB();
     const contentType = req.headers.get("content-type") || "";
     let body: any = {};
 
@@ -62,7 +49,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
 
     if (mobile) {
-      const [existing]: any = await pool.execute(
+      const [existing]: any = await db.execute(
         "SELECT id FROM users WHERE mobile = ? AND id != ? LIMIT 1",
         [mobile, id]
       );
@@ -91,7 +78,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
     values.push(id);
 
-    await pool.execute(`UPDATE users SET ${updates.join(", ")} WHERE id=?`, values);
+    await db.execute(`UPDATE users SET ${updates.join(", ")} WHERE id=?`, values);
+
 
     return NextResponse.json({ success: true, message: "User updated successfully", image: imagePath || null });
 
@@ -103,9 +91,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   const { id } = await params;
-  const [result] = await pool.execute("DELETE FROM users WHERE id = ?", [id]);
+  const db = await connectDB();
+  const [result] = await db.execute("DELETE FROM users WHERE id = ?", [id]);
+
   if ((result as any).affectedRows === 0) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
   return NextResponse.json({ message: "User deleted successfully" });
 }
+
+

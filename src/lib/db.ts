@@ -19,6 +19,8 @@ export async function connectDB() {
     
   });
 
-  console.log("✅ Connected to MySQL!");
+  console.log("Connected to MySQL!");
   return connection;
 }
+
+
