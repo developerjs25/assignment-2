@@ -19,7 +19,7 @@ export default function LoginPage() {
         try {
             const response = await axios.post('/api/auth/login', {
                 identifier,
-                password
+                password,
             });
 
             const { token, name, image, id } = response.data;

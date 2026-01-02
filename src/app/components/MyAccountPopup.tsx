@@ -25,6 +25,7 @@ export default function MyAccountPopup({
   const [preview, setPreview] = useState<string>("");
 
   useEffect(() => {
+      console.log("Fetching user with ID:", userId);
     if (!userId) return;
 
     async function fetchUser() {
@@ -37,10 +38,11 @@ export default function MyAccountPopup({
           email: data.email || "",
           mobile: data.mobile || "",
           dob: data.dob?.split("T")[0] || "",
-          status: data.status || "",
-          role: data.role || "",
+          status: data.status || "actice" ,
+          role: data.role || "user",
           image: data.image || "",
         });
+        
 
         if (data.image) setPreview(data.image);
       } catch (error) {
@@ -79,8 +81,13 @@ export default function MyAccountPopup({
         toast.error("Mobile number is already registered");
         return;
       }
+setForm((prev) => ({ ...prev, image: data.image || prev.image }));
 
-      setForm((prev) => ({ ...prev, image: data.image || prev.image }));
+    if (form.name) localStorage.setItem("name", form.name);
+    if (data.image) localStorage.setItem("image", data.image);
+
+    window.dispatchEvent(new Event("storage"));
+
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error(error);

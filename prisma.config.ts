@@ -3,6 +3,6 @@ import "dotenv/config";
 
 export default defineConfig({
   datasource: {
-    url: process.env.DATABASE_URL!,
+    url:"mysql://root:root@localhost:8889/assignment-2old",
   },
 });

@@ -2,13 +2,15 @@
   "name": "assignment2",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "seed": "tsx prisma/seed.ts",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
+ "scripts": {
+  "dev": "next dev",
+  "seed": "tsx prisma/seed.ts",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint",
+  "migrate": "tsx migrations/run-migration.ts/"
+},
+
   "dependencies": {
     "@heroui/pagination": "^2.2.25",
     "@heroui/react": "^2.8.6",

@@ -13,45 +13,9 @@ const SignupForm = () => {
     password: "",
   });
 
-  // const handleSubmit = async (e: any) => {
-  //   e.preventDefault();
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
 
-  //   const res = await fetch("/api/users", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(form),
-  //   });
-
-  //   const data = await res.json();
-
-  //   if (!res.ok) {
-  //     if (data.message === "Email address is already registered") {
-  //       toast.error("Email address is already registered");
-  //     } else {
-  //       toast.error(data.message || "Something went wrong");
-  //     }
-  //     return;
-  //   }
-
-  //   const { token, name, image, id } = data;
-
-  //   localStorage.setItem("token", token);
-  //   localStorage.setItem("name", form.name);
-  //   localStorage.setItem("image", image);
-  //   localStorage.setItem("userId", id);
-
-
-  //   toast.success("User is saved");
-
-  //   setForm({ name: "", email: "", password: "" });
-
-  //   router.push("/admin/Userlist");
-  // };
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  try {
     const res = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -61,26 +25,25 @@ const handleSubmit = async (e: React.FormEvent) => {
     const data = await res.json();
 
     if (!res.ok) {
-      toast.error(data.message );
+      if (data.message === "Email address is already registered") {
+        toast.error("Email address is already registered");
+      } else {
+        toast.error(data.message || "Something went wrong");
+      }
       return;
     }
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("name", data.name);
-    localStorage.setItem("image", data.image);
-    localStorage.setItem("userId", data.id);
+    const { token, name, image, id } = data;
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("name", form.name);
+    localStorage.setItem("image", image);
+    localStorage.setItem("userId", id);
 
     toast.success("User is saved");
-
     setForm({ name: "", email: "", password: "" });
-
     router.push("/admin/Userlist");
-
-  } catch (error) {
-    toast.error("Server error. Please try again.");
-  }
-};
-
+  };
 
   return (
     <Layout>

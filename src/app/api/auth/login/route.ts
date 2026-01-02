@@ -1,29 +1,34 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import mysql from 'mysql2/promise';
+// import { pool } from "@/lib/db";
+import { connectDB } from "@/lib/db";
+
+
 
 const SECRET = 'your_jwt_secret_here';
 
 export async function POST(request: Request) {
   const { identifier, password } = await request.json();
   console.log("identifier:", identifier, "password:", password);
-
-  const connection = await mysql.createConnection({
-    host: "127.0.0.1",
-    user: "root",
-    password: "root",
-    database: "assignment-2",
-    port: 8889,
-  });
+  const db = await connectDB()
 
   try {
-    const [rows] = await connection.execute(
+    const [rows] = await db.execute(
       'SELECT * FROM users WHERE email = ? OR mobile = ?',
       [identifier, identifier]
     );
 
     const user = (rows as any[])[0];
+
+    //  const result = await pool.query(
+    //   'SELECT * FROM users WHERE email = $1 OR mobile = $2',
+    //   [identifier, identifier]
+    // );
+
+    // const user = result.rows[0];
+
+
     if (!user) {
       return NextResponse.json(
         { error: 'Invalid email/mobile or password' },
@@ -62,8 +67,6 @@ export async function POST(request: Request) {
 
   } catch (err) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
-  } finally {
-    await connection.end();
-  }
+  } 
 
 }

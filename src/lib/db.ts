@@ -22,5 +22,24 @@ export async function connectDB() {
   console.log("Connected to MySQL!");
   return connection;
 }
+// import pkg from 'pg';
+// const { Pool } = pkg;
 
+// export const pool = new Pool({
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'assignment-2',
+//   password: 'StrongPass123!',
+//   port: 5432,
+// });
+
+// // Test connection
+// pool.connect()
+//   .then(client => {
+//     console.log('✅ Database connected successfully');
+//     client.release(); // release the client back to the pool
+//   })
+//   .catch(err => {
+//     console.error('❌ Database connection error:', err);
+//   });
 

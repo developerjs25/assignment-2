@@ -7,15 +7,15 @@ datasource db {
 }
 
 model users {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  email     String    
   password  String
-  mobile    String
-  status    String    @default("active")
-  role      String    @default("user")
+  mobile    String?
+  status    String   @default("active")
+  role      String   @default("user")
   image     String?
   dob       DateTime?
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
+  email     String   @unique
 }
- npx prisma migrate dev --name init
+

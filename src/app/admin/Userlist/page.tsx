@@ -59,7 +59,9 @@ export default function AdminUsers() {
     if (token) {
       try {
         const decoded: any = JSON.parse(atob(token.split(".")[1]));
+        // setCurrentUserId(decoded.userId?.id ?? null);
         setCurrentUserId(decoded.userId);
+
       } catch {
         console.log("Invalid token");
       }
@@ -73,7 +75,7 @@ export default function AdminUsers() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
-    }, 500);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, [search]);
